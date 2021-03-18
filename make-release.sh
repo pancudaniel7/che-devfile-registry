@@ -38,11 +38,7 @@ performRelease()
   VERSION=$(head -n 1 VERSION)
   IMAGE=che-devfile-registry
   DOCKERFILE_PATH=./build/dockerfiles/Dockerfile
-  docker buildx build --platform "$PLATFORMS" -t ${IMAGE} -f ${DOCKERFILE_PATH} --build-arg PATCHED_IMAGES_TAG="${VERSION}" --target registry .
-  docker tag ${IMAGE} "quay.io/eclipse/${IMAGE}:${SHORT_SHA1}"
-  docker push "quay.io/eclipse/${IMAGE}:${SHORT_SHA1}"
-  docker tag ${IMAGE} "quay.io/eclipse/${IMAGE}:${VERSION}"
-  docker push "quay.io/eclipse/${IMAGE}:${VERSION}"
+  docker buildx build --push --platform "$PLATFORMS" -t ${IMAGE} -f ${DOCKERFILE_PATH} --build-arg PATCHED_IMAGES_TAG="${VERSION}" --target registry .
 }
 
 if [[ ! ${VERSION} ]]; then
