@@ -12,8 +12,12 @@ RUN yum install yum-utils -y -q; \
     yum install net-tools -y -q; \
     yum install bind-utils -y -q; \
     yum install lsof -y -q; \
-    yum install device-mapper-persistent-data -y; \ 
-    yum install lvm2 -y
+    yum install device-mapper-persistent-data -y -q; \
+    yum install lvm2 -y -q
+    
+RUN yum module install go-toolset -y -q && \
+    GO111MODULE=on go get github.com/bitnami-labs/sealed-secrets/cmd/kubeseal@d15c388248912213c930d1dc5b0f84c627bca3ea && \
+    ln -s $HOME/go/bin/kubeseal /usr/local/bin/kubeseal
 
 COPY resources/RPM-GPG-KEY-centos-packages /etc/rpm-gpg/RPM-GPG-KEY-centos-packages
 RUN rpm --import /etc/rpm-gpg/RPM-GPG-KEY-centos-packages --quiet && \
@@ -33,11 +37,10 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master
     chmod 700 get_helm.sh && \
     ./get_helm.sh
 
-COPY keys/apache-pulsar-2.7.1-bin.tar.gz.sha512 apache-pulsar-2.7.1-bin.tar.gz.sha512
+COPY resources/apache-pulsar-2.7.1-bin.tar.gz.sha512 apache-pulsar-2.7.1-bin.tar.gz.sha512
 RUN wget https://archive.apache.org/dist/pulsar/pulsar-2.7.1/apache-pulsar-2.7.1-bin.tar.gz -q && \
-    echo "$(cat apache-pulsar-2.7.1-bin.tar.gz.sha512)" | sha512sum --check && \
+    sha512sum --check apache-pulsar-2.7.1-bin.tar.gz.sha512 && \
     tar xvfz apache-pulsar-2.7.1-bin.tar.gz 1>/dev/null && \
-    rm -rf apache-pulsar-2.7.1-bin.tar.gz && \
-    echo 'PATH=$PATH:/opt/apache-pulsar-2.7.1/bin' > /etc/environment
-
+    rm -rf apache-pulsar-2.7.1-bin.tar.gz
+    
 USER jboss
