@@ -20,16 +20,16 @@ RUN yum module install go-toolset -y -q && \
     ln -s $HOME/go/bin/kubeseal /usr/local/bin/kubeseal
 
 COPY resources/RPM-GPG-KEY-centos-packages /etc/rpm-gpg/RPM-GPG-KEY-centos-packages
-RUN rpm --import /etc/rpm-gpg/RPM-GPG-KEY-centos-packages --quiet && \
-    rpm --checksig http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/telnet-0.17-73.el8_1.1.x86_64.rpm  --quiet && \
-    rpm -ivh http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/telnet-0.17-73.el8_1.1.x86_64.rpm --quiet
+RUN wget http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/telnet-0.17-73.el8_1.1.x86_64.rpm -q && \
+    rpm --import /etc/rpm-gpg/RPM-GPG-KEY-centos-packages --quiet && \
+    rpm --checksig telnet-0.17-73.el8_1.1.x86_64.rpm  --quiet && \
+    rpm -ivh telnet-0.17-73.el8_1.1.x86_64.rpm --quiet
 
-COPY resources/docker-20.10.6.tgz.sha512 ./docker-20.10.6.tgz.sha512
-RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.6.tgz -q && \
-    sha512sum --check docker-20.10.6.tgz.sha512 && \
-    tar xzvf docker-20.10.6.tgz && \
-    cp docker/* /usr/bin && \
-    rm -rf docker/ docker-20.10.6.tgz.sha512
+COPY resources/RPM-GPG-KEY-fedora-docker-packages /etc/rpm-gpg/RPM-GPG-KEY-fedora-docker-packages
+RUN rpm --import /etc/rpm-gpg/RPM-GPG-KEY-fedora-docker-packages && \
+    dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo && \
+    dnf upgrade && \
+    dnf install docker-ce-cli -y
 
 COPY resources/get_helm.sha512 ./get_helm.sha512
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
@@ -42,5 +42,7 @@ RUN wget https://archive.apache.org/dist/pulsar/pulsar-2.7.1/apache-pulsar-2.7.1
     sha512sum --check apache-pulsar-2.7.1-bin.tar.gz.sha512 && \
     tar xvfz apache-pulsar-2.7.1-bin.tar.gz 1>/dev/null && \
     rm -rf apache-pulsar-2.7.1-bin.tar.gz
-    
+
+RUN usermod -G root jboss    
 USER jboss
+
