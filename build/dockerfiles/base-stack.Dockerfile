@@ -38,6 +38,5 @@ RUN curl -sSL -O http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/
 #     tar xvfz apache-pulsar-2.7.1-bin.tar.gz 1>/dev/null && \
 #     rm -rf apache-pulsar-2.7.1-bin.tar.gz
 
-RUN usermod -G root jboss    
 USER jboss
 
