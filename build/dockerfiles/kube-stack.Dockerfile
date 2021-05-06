@@ -27,6 +27,12 @@ RUN curl -fsSL --silent -o get_helm.sh https://raw.githubusercontent.com/helm/he
     && chmod 700 get_helm.sh \
     && ./get_helm.sh \
     && rm -f get_helm.sh get_helm.sha512
+
+COPY resources/kubeseal-v0.13.1.sha512 ./kubeseal-v0.13.1.sha512
+RUN curl -fsSL --silent -o kubeseal https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.13.1/kubeseal-linux-amd64 \
+    && sha512sum --check kubeseal-v0.13.1.sha512 \
+    && install -m 755 kubeseal /usr/local/bin/kubeseal \
+    && rm -rf kubeseal-v0.13.1.sha512 kubeseal
     
 RUN chown -R jboss \
     /opt \
