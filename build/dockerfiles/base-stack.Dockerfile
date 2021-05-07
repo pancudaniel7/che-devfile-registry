@@ -21,7 +21,7 @@ RUN curl -sSL -O http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/
     && rpm -ivh --quiet telnet-0.17-73.el8_1.1.x86_64.rpm \
     && rm -f RPM-GPG-KEY-centos-packages telnet-0.17-73.el8_1.1.x86_64.rpm
 
-RUN chown -R jboss \
+RUN chmod -R 777 \
     /opt \
     /home/jboss \
     /usr/local/ \

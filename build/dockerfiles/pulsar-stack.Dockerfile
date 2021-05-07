@@ -27,7 +27,7 @@ RUN curl -fsSL --silent -O https://archive.apache.org/dist/pulsar/pulsar-2.7.1/a
     && tar xvfz apache-pulsar-2.7.1-bin.tar.gz 1>/dev/null \
     && rm -Rf apache-pulsar-2.7.1-bin.tar.gz apache-pulsar-2.7.1-bin.tar.gz.sha512 apache-pulsar-2.7.1/examples
 
-RUN chown -R jboss \
+RUN chmod -R 777 \
     /opt \
     /home/jboss \
     /usr/local/ \

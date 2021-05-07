@@ -34,7 +34,7 @@ RUN curl -fsSL --silent -o kubeseal https://github.com/bitnami-labs/sealed-secre
     && install -m 755 kubeseal /usr/local/bin/kubeseal \
     && rm -rf kubeseal-v0.13.1.sha512 kubeseal
     
-RUN chown -R jboss \
+RUN chmod -R 777 \
     /opt \
     /home/jboss \
     /usr/local/ \
