@@ -33,6 +33,9 @@ RUN curl -fsSL --silent -o kubeseal https://github.com/bitnami-labs/sealed-secre
     && sha512sum --check kubeseal-v0.13.1.sha512 \
     && install -m 755 kubeseal /usr/local/bin/kubeseal \
     && rm -rf kubeseal-v0.13.1.sha512 kubeseal
+
+COPY resources/tkn_0.19.0_Linux_x86_64.tar.gz .
+RUN tar xvzf tkn_0.19.0_Linux_x86_64.tar.gz -C /usr/local/bin/ tkn
     
 RUN chmod -R 777 \
     /opt \
