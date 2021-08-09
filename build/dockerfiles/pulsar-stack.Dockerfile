@@ -1,25 +1,24 @@
-FROM registry.redhat.io/codeready-workspaces/plugin-java8-rhel8:2.7-5
+FROM registry.redhat.io/codeready-workspaces/plugin-java8-rhel8:2.10-4
 
 USER root
 WORKDIR /opt
 
-RUN yum update -y -q
+RUN yum update -y
 
-RUN yum install -y -q yum-utils; \
-    yum install -y -q httpd; \
-    yum install -y -q net-tools; \
-    yum install -y -q bind-utils; \
-    yum install -y -q lsof; \
-    yum install -y -q device-mapper-persistent-data; \
-    yum install -y -q vim; \
-    yum install -y -q jq
+RUN yum install yum-utils -y; \   
+    yum install net-tools -y; \   
+    yum install bind-utils -y; \   
+    yum install lsof -y; \   
+    yum install device-mapper-persistent-data -y; \   
+    yum install vim -y; \   
+    yum install jq -y
 
-COPY resources/RPM-GPG-KEY-centos-packages RPM-GPG-KEY-centos-packages
-RUN curl -sSL -O http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/telnet-0.17-73.el8_1.1.x86_64.rpm \
-    && rpm --import --quiet RPM-GPG-KEY-centos-packages \
-    && rpm --quiet --checksig telnet-0.17-73.el8_1.1.x86_64.rpm \
-    && rpm -ivh --quiet telnet-0.17-73.el8_1.1.x86_64.rpm \
-    && rm -f RPM-GPG-KEY-centos-packages telnet-0.17-73.el8_1.1.x86_64.rpm
+COPY resources/RPM-GPG-KEY-centos8-packages RPM-GPG-KEY-centos8-packages
+COPY resources/telnet-0.17-76.rpm telnet-0.17-76.rpm
+RUN rpm --import RPM-GPG-KEY-centos8-packages && \
+    rpm --checksig telnet-0.17-76.rpm && \
+    rpm -ivh --quiet telnet-0.17-76.rpm && \
+    rm -f RPM-GPG-KEY-centos-packages telnet-0.17-76.rpm
     
 COPY resources/apache-pulsar-2.7.1-bin.tar.gz.sha512 apache-pulsar-2.7.1-bin.tar.gz.sha512
 RUN curl -fsSL --silent -O https://archive.apache.org/dist/pulsar/pulsar-2.7.1/apache-pulsar-2.7.1-bin.tar.gz \
